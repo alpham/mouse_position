@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+
+
 namespace Ui {
 class MainWindow;
 }
@@ -10,22 +12,40 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-    
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    
+
 private:
+    enum {
+        colCount = 3
+    };
     Ui::MainWindow *ui;
-    QMouseEvent *mouseEvent;
+    int lastRow;
+    QString fileName;
+    void createActions();
+    void loadActions();
+    void loadConnections();
+    bool loadFile(const QString &fileName);
+    void loadRow(int row, const QString ch);
+    void insertRow();
+
     bool eventFilter(QObject *obj, QEvent *event);
 
-signals:
-    void mouseMoved(QPoint);
-    void statusBarUpdated();
+    /*
+     *Actions
+     */
+    QAction *newRow;
+    QAction *deleteRow;
+    QAction *save;
+
 
 private slots:
-    void updateStatusBar(QPoint);
+    void createRow();
+    void removeRow();
+    bool saveFile();
+    void about();
 
 };
 
