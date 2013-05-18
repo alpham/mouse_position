@@ -17,11 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     customizeTimerEevent(TIMER_INTERVAL);
     loadActions();
     loadConnections();
-    ui->tableWidget->setItemPrototype(new QTableWidgetItem);
-    ui->tableWidget->setColumnCount(colCount);
-    ui->tableWidget->setHorizontalHeaderItem(0,new QTableWidgetItem(tr("Time")));
-    ui->tableWidget->setHorizontalHeaderItem(1,new QTableWidgetItem(tr("X Coordinate")));
-    ui->tableWidget->setHorizontalHeaderItem(2,new QTableWidgetItem(tr("Y Coordinate")));
+    installTable();
     fileName = "row" ;
     loadFile(fileName);
 
@@ -165,4 +161,13 @@ void MainWindow::customizeTimerEevent(int I)
     timer->setInterval(I);
     QTimerEvent *timerEvnt = new QTimerEvent(timer->interval());
     timerEvent(timerEvnt);
+}
+
+void MainWindow::installTable()
+{
+    ui->tableWidget->setItemPrototype(new QTableWidgetItem);
+    ui->tableWidget->setColumnCount(colCount);
+    ui->tableWidget->setHorizontalHeaderItem(0,new QTableWidgetItem(tr("Time")));
+    ui->tableWidget->setHorizontalHeaderItem(1,new QTableWidgetItem(tr("X Coordinate")));
+    ui->tableWidget->setHorizontalHeaderItem(2,new QTableWidgetItem(tr("Y Coordinate")));
 }

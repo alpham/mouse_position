@@ -34,6 +34,7 @@ private:
     void loadRow(int row, const QString ch);
     void insertRow();
     void customizeTimerEevent(int I = 1);
+    void installTable();
 
     bool eventFilter(QObject *obj, QEvent *event);
 
