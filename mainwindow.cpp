@@ -10,7 +10,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     lastRow = 0;
     ui->setupUi(this);
+    time = new QTime(0,0,0,0);
+    point = new QPoint;
+    time->start();
     qApp->installEventFilter(this);
+    customizeTimerEevent(TIMER_INTERVAL);
     loadActions();
     loadConnections();
     ui->tableWidget->setItemPrototype(new QTableWidgetItem);
@@ -25,12 +29,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
-  if (event->type() == QEvent::MouseMove)
+    if (event->type() == QEvent::MouseMove || event->type() == QEvent::Timer )
   {
     QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-    statusBar()->showMessage(QString("Mouse move (%1,%2)").arg(mouseEvent->globalPos().x()).arg(mouseEvent->globalPos().y()));
-    loadRow(lastRow,QString("time,%1,%2").arg(mouseEvent->globalPos().x()).arg(mouseEvent->globalPos().y()));
-    qDebug()<< QString("Mouse move (%1,%2)").arg(mouseEvent->globalPos().x()).arg(mouseEvent->globalPos().y()) << endl;
+    QTime *timeEvent = static_cast<QTime*>(time);
+    point->setX(event->type() == QEvent::Timer ? point->x() : mouseEvent->globalPos().x());
+    point->setY(event->type() == QEvent::Timer ? point->y() : mouseEvent->globalPos().y());
+    loadRow(lastRow,QString("%0,%1,%2")
+            .arg(timeEvent->elapsed())
+            .arg(point->x())
+            .arg(point->y()));
+    statusBar()->showMessage(QString("Time (msec) = %0 msec , Mouse move (%1,%2) , Rows = %3 rows")
+                             .arg(QString("%1 : %2")
+                                  .arg(time->elapsed()/1000)
+                                  .arg(time->elapsed()%1000))
+                             .arg(point->x())
+                             .arg(point->y())
+                             .arg(ui->tableWidget->rowCount()));
+//    qDebug()<< QString("Mouse move (%1,%2) , Rows = %3 rows").arg(mouseEvent->globalPos().x()).arg(mouseEvent->globalPos().y()).arg(ui->tableWidget->rowCount()) << endl;
     ui->tableWidget->setCurrentCell(lastRow,0);
   }
   return false;
@@ -140,4 +156,13 @@ bool MainWindow::saveFile(){
 
 void MainWindow::about()
 {
+}
+
+
+void MainWindow::customizeTimerEevent(int I)
+{
+    QTimer *timer = new QTimer(this);
+    timer->setInterval(I);
+    QTimerEvent *timerEvnt = new QTimerEvent(timer->interval());
+    timerEvent(timerEvnt);
 }

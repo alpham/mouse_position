@@ -43,14 +43,8 @@
     </property>
     <addaction name="action_About"/>
    </widget>
-   <widget class="QMenu" name="menuAhmed">
-    <property name="title">
-     <string>ahmed</string>
-    </property>
-   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Help"/>
-   <addaction name="menuAhmed"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
